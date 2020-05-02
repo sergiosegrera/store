@@ -1,0 +1,4 @@
+# It is not a good idea to store sensitive information like this.
+POSTGRES_USER=product
+POSTGRES_PASSWORD=verysecuremuchwow
+POSTGRES_DB=product

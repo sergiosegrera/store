@@ -1,0 +1,67 @@
+version: "3.7"
+
+services:
+    db:
+        container_name: product-database
+        image: postgres
+        restart: always
+        env_file:
+            "./envfile"
+        volumes:
+            - "./database:/var/lib/postgresql/data"
+        ports:
+            - "5432:5432"
+
+    product-manager:
+        container_name: product-manager-service
+        build: ./product-manager
+        restart: always
+        env_file:
+            - "./envfile"
+        volumes:
+            - "./product-manager:/service"
+        ports:
+            - "8081:8080"
+        depends_on:
+            - db
+
+    product:
+        container_name: product-service
+        build: ./product
+        restart: always
+        env_file:
+            - "./envfile"
+        volumes:
+            - "./product:/service"
+        ports:
+            - "8080:8080"
+        depends_on:
+            - db
+
+    cart:
+        container_name: cart-service
+        build: ./cart
+        restart: always
+        env_file:
+            - "./envfile"
+        volumes:
+            - "./cart:/service"
+        ports:
+            - "8082:8080"
+            - "8000"
+        depends_on:
+            - db
+
+    checkout:
+        container_name: checkout-service
+        build: ./checkout
+        restart: always
+        env_file:
+            - "./envfile"
+        volumes:
+            - "./checkout:/service"
+        ports:
+            - "8083:8080"
+        depends_on:
+            - cart
+            - db

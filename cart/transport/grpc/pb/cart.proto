@@ -1,0 +1,17 @@
+syntax = "proto3";
+package pb;
+
+service CartService {
+    rpc PostCart(Cart) returns (Cart) {}
+}
+
+message Cart {
+    repeated CartProduct cartProducts = 1; 
+}
+
+message CartProduct {
+    int64 id = 1;
+    int64 optionId = 2;
+    int64 count = 3;
+    int64 price = 4;
+}
