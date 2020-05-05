@@ -1,21 +1,31 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/signal"
 
 	"github.com/go-pg/pg/v9"
+	"github.com/sergiosegrera/store/cart/config"
 	"github.com/sergiosegrera/store/cart/db"
+	"github.com/sergiosegrera/store/cart/middlewares"
 	"github.com/sergiosegrera/store/cart/service"
-	grpctransport "github.com/sergiosegrera/store/cart/transport/grpc"
-	httptransport "github.com/sergiosegrera/store/cart/transport/http"
+	grpctransport "github.com/sergiosegrera/store/cart/transports/grpc"
+	httptransport "github.com/sergiosegrera/store/cart/transports/http"
+	"go.uber.org/zap"
 )
 
 func main() {
+	conf := config.New()
+
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	defer logger.Sync()
+
 	// Connect to DB
 	options := &pg.Options{
-		Addr:     "db:5432",
+		Addr:     conf.DatabaseAddress,
 		User:     "product",
 		Database: "product",
 		Password: "verysecuremuchwow",
@@ -27,21 +37,23 @@ func main() {
 	}
 	defer db.Close()
 
-	// Start attach db and start http server
+	cartService := service.NewService(db, conf)
+	cartService = middlewares.Logging{logger, cartService}
+
 	go func() {
-		log.Println("Started the http server")
-		err := httptransport.Serve(service.NewService(db))
+		logger.Info("started the http server", zap.String("port", conf.HttpPort))
+		err := httptransport.Serve(cartService, conf)
 		if err != nil {
-			log.Println("The http server panicked:", err)
+			logger.Error("the http server panicked", zap.String("err", err.Error()))
 			os.Exit(1)
 		}
 	}()
 
 	go func() {
-		log.Println("Started the gRPC server")
-		err := grpctransport.Serve(service.NewService(db))
+		logger.Info("started the grpc server", zap.String("port", conf.GrpcPort))
+		err := grpctransport.Serve(cartService, conf)
 		if err != nil {
-			log.Println("The gRPC server panicked:", err)
+			logger.Error("the grpc server panicked", zap.String("err", err.Error()))
 			os.Exit(1)
 		}
 	}()
@@ -51,5 +63,5 @@ func main() {
 	signal.Notify(c, os.Kill)
 
 	sig := <-c
-	log.Println("Got signal:", sig)
+	logger.Info("exited", zap.String("sig", sig.String()))
 }

@@ -1,0 +1,14 @@
+syntax = "proto3";
+package pb;
+
+service CartService {
+    rpc Check(Token) returns (Valid) {}
+}
+
+message Token {
+    string token = 2;
+}
+
+message Valid {
+    bool valid = 1;
+}

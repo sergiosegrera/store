@@ -1,20 +1,28 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/signal"
 
 	"github.com/go-pg/pg/v9"
+	"github.com/sergiosegrera/store/product-manager/config"
 	"github.com/sergiosegrera/store/product-manager/db"
+	"github.com/sergiosegrera/store/product-manager/middlewares"
 	"github.com/sergiosegrera/store/product-manager/service"
-	"github.com/sergiosegrera/store/product-manager/transport/http"
+	"github.com/sergiosegrera/store/product-manager/transports/http"
+	"go.uber.org/zap"
 )
 
 func main() {
-	// Connect to DB
+	conf := config.New()
+
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+
 	options := &pg.Options{
-		Addr:     "db:5432",
+		Addr:     conf.DatabaseAddress,
 		User:     "product",
 		Database: "product",
 		Password: "verysecuremuchwow",
@@ -26,38 +34,15 @@ func main() {
 	}
 	defer db.Close()
 
-	// Add mock data
-	// product := models.Product{
-	// 	Name:        "White T-Shirt",
-	// 	Thumbnail:   "https://imgur.com/qEOvdMp",
-	// 	Images:      []string{"https://imgur.com/qEOvdMp", "https://imgur.com/qEOvdMp"},
-	// 	Description: "Plain white T-Shirt",
-	// 	Price:       30,
-	// 	Public:      true,
-	// }
-
-	// result, err := db.Model(&product).Returning("id").Insert()
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// option := models.Option{
-	// 	ProductId: int64(result.RowsReturned()),
-	// 	Name:      "Small",
-	// 	Stock:     30,
-	// }
-
-	// err = db.Insert(&option)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	productManagerService := service.NewService(db)
+	productManagerService = middlewares.Logging{logger, productManagerService}
 
 	// Start attach db and start http server
 	go func() {
-		log.Println("Started the http server")
-		err := http.Serve(service.NewService(db))
+		logger.Info("started the http server", zap.String("port", conf.HttpPort))
+		err := http.Serve(productManagerService, conf)
 		if err != nil {
-			log.Println("The http server panicked:", err)
+			logger.Error("the http server panicked", zap.String("err", err.Error()))
 			os.Exit(1)
 		}
 	}()
@@ -67,5 +52,5 @@ func main() {
 	signal.Notify(c, os.Kill)
 
 	sig := <-c
-	log.Println("Got signal:", sig)
+	logger.Info("exited", zap.String("sig", sig.String()))
 }

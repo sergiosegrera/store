@@ -2,17 +2,27 @@ package main
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/signal"
 
-	cartClient "github.com/sergiosegrera/store/cart/client/grpc"
+	cartclient "github.com/sergiosegrera/store/cart/clients/grpc"
+	"github.com/sergiosegrera/store/checkout/config"
+	"github.com/sergiosegrera/store/checkout/middlewares"
 	"github.com/sergiosegrera/store/checkout/service"
-	"github.com/sergiosegrera/store/checkout/transport/http"
+	"github.com/sergiosegrera/store/checkout/transports/http"
+	stripeclient "github.com/stripe/stripe-go/client"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
 func main() {
+	conf := config.New()
+
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	defer logger.Sync()
 	// Connect to DB
 	// options := &pg.Options{
 	// 	Addr:     "db:5432",
@@ -26,16 +36,24 @@ func main() {
 	// 	panic(err)
 	// }
 	// defer db.Close()
+	// Start stripe client connection
+	sc := stripeclient.New(conf.StripeSecret, nil)
 
 	// Start attach db and start http server
-	s := grpc.Dial("cart:8080", grpc.WithInsecure())
-	client := cartClient.New(context.Background(), s)
+	conn, err := grpc.Dial(conf.CartGrpcAddress, grpc.WithInsecure())
+	if err != nil {
+		panic(err)
+	}
+	cc := cartclient.New(context.Background(), conn)
+
+	checkoutService := service.NewService(cc, sc)
+	checkoutService = middlewares.Logging{logger, checkoutService}
 
 	go func() {
-		log.Println("Started the http server")
-		err := http.Serve(service.NewService(client))
+		logger.Info("started the http server", zap.String("port", conf.HttpPort))
+		err := http.Serve(checkoutService, conf)
 		if err != nil {
-			log.Println("The http server panicked:", err)
+			logger.Error("the http server panicked", zap.String("err", err.Error()))
 			os.Exit(1)
 		}
 	}()
@@ -45,5 +63,5 @@ func main() {
 	signal.Notify(c, os.Kill)
 
 	sig := <-c
-	log.Println("Got signal:", sig)
+	logger.Info("exited", zap.String("sig", sig.String()))
 }

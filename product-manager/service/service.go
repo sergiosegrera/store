@@ -14,18 +14,18 @@ type ProductManagerService interface {
 	DeleteProduct(ctx context.Context, id int64) error
 	// TODO: Option management
 	PostOption(ctx context.Context, option models.Option) error
-	// DeleteOption(ctx context.Context, id int64) error
+	DeleteOption(ctx context.Context, id int64) error
 }
 
 type Service struct {
 	db *pg.DB
 }
 
-func NewService(d *pg.DB) *Service {
-	return &Service{db: d}
+func NewService(d *pg.DB) ProductManagerService {
+	return Service{db: d}
 }
 
-func (s *Service) GetProducts(ctx context.Context) ([]*models.Product, error) {
+func (s Service) GetProducts(ctx context.Context) ([]*models.Product, error) {
 	var products []*models.Product
 	err := s.db.Model(&products).Select()
 	if err != nil {
@@ -35,7 +35,7 @@ func (s *Service) GetProducts(ctx context.Context) ([]*models.Product, error) {
 	return products, err
 }
 
-func (s *Service) GetProduct(ctx context.Context, id int64) (*models.Product, error) {
+func (s Service) GetProduct(ctx context.Context, id int64) (*models.Product, error) {
 	product := &models.Product{Id: id}
 	err := s.db.Select(product)
 	if err != nil {
@@ -53,27 +53,29 @@ func (s *Service) GetProduct(ctx context.Context, id int64) (*models.Product, er
 	return product, err
 }
 
-func (s *Service) PostProduct(ctx context.Context, product models.Product) error {
+func (s Service) PostProduct(ctx context.Context, product models.Product) error {
+	// TODO: Data validation
 	err := s.db.Insert(&product)
-	if err != nil {
-		return err
-	}
 
 	return err
 }
 
-func (s *Service) DeleteProduct(ctx context.Context, id int64) error {
+func (s Service) DeleteProduct(ctx context.Context, id int64) error {
 	product := &models.Product{Id: id}
 	err := s.db.Delete(product)
 
 	return err
 }
 
-func (s *Service) PostOption(ctx context.Context, option models.Option) error {
+func (s Service) PostOption(ctx context.Context, option models.Option) error {
 	err := s.db.Insert(&option)
-	if err != nil {
-		return err
-	}
+
+	return err
+}
+
+func (s Service) DeleteOption(ctx context.Context, id int64) error {
+	option := &models.Option{Id: id}
+	err := s.db.Delete(option)
 
 	return err
 }
