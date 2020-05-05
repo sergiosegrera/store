@@ -44,6 +44,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer conn.Close()
+
 	cc := cartclient.New(context.Background(), conn)
 
 	checkoutService := service.NewService(cc, sc)

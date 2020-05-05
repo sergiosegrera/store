@@ -7,7 +7,8 @@ import (
 	"github.com/sergiosegrera/store/auth/config"
 	"github.com/sergiosegrera/store/auth/middlewares"
 	"github.com/sergiosegrera/store/auth/service"
-	"github.com/sergiosegrera/store/auth/transports/http"
+	grpctransport "github.com/sergiosegrera/store/auth/transports/grpc"
+	httptransport "github.com/sergiosegrera/store/auth/transports/http"
 	"go.uber.org/zap"
 )
 
@@ -25,9 +26,18 @@ func main() {
 
 	go func() {
 		logger.Info("started the http server", zap.String("port", conf.HttpPort))
-		err := http.Serve(authService, conf)
+		err := httptransport.Serve(authService, conf)
 		if err != nil {
 			logger.Error("the http server panicked", zap.String("err", err.Error()))
+			os.Exit(1)
+		}
+	}()
+
+	go func() {
+		logger.Info("started the grpc server", zap.String("port", conf.GrpcPort))
+		err := grpctransport.Serve(authService, conf)
+		if err != nil {
+			logger.Error("the grpc server panicked", zap.String("err", err.Error()))
 			os.Exit(1)
 		}
 	}()

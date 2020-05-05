@@ -21,9 +21,5 @@ func New(ctx context.Context, cc *grpc.ClientConn) *Client {
 
 func (c *Client) PostCart(cart *pb.Cart) (*pb.Cart, error) {
 	result, err := c.client.PostCart(c.ctx, cart)
-	if err != nil {
-		return nil, err
-	}
-
 	return result, err
 }

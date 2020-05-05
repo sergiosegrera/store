@@ -11,6 +11,7 @@ import (
 	"github.com/sergiosegrera/store/product-manager/service"
 	"github.com/sergiosegrera/store/product-manager/transports/http"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -34,13 +35,20 @@ func main() {
 	}
 	defer db.Close()
 
+	// Auth service conenction
+	conn, err := grpc.Dial(conf.AuthGrpcAddress, grpc.WithInsecure())
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+
 	productManagerService := service.NewService(db)
 	productManagerService = middlewares.Logging{logger, productManagerService}
 
 	// Start attach db and start http server
 	go func() {
 		logger.Info("started the http server", zap.String("port", conf.HttpPort))
-		err := http.Serve(productManagerService, conf)
+		err := http.Serve(productManagerService, conf, conn)
 		if err != nil {
 			logger.Error("the http server panicked", zap.String("err", err.Error()))
 			os.Exit(1)

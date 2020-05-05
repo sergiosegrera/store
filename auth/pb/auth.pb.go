@@ -26,55 +26,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type Password struct {
-	Password             string   `protobuf:"bytes,1,opt,name=password,proto3" json:"password,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Password) Reset()         { *m = Password{} }
-func (m *Password) String() string { return proto.CompactTextString(m) }
-func (*Password) ProtoMessage()    {}
-func (*Password) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8bbd6f3875b0e874, []int{0}
-}
-func (m *Password) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *Password) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_Password.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *Password) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Password.Merge(m, src)
-}
-func (m *Password) XXX_Size() int {
-	return m.Size()
-}
-func (m *Password) XXX_DiscardUnknown() {
-	xxx_messageInfo_Password.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Password proto.InternalMessageInfo
-
-func (m *Password) GetPassword() string {
-	if m != nil {
-		return m.Password
-	}
-	return ""
-}
-
 type Token struct {
-	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
 	Token                string   `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -85,7 +37,7 @@ func (m *Token) Reset()         { *m = Token{} }
 func (m *Token) String() string { return proto.CompactTextString(m) }
 func (*Token) ProtoMessage()    {}
 func (*Token) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8bbd6f3875b0e874, []int{1}
+	return fileDescriptor_8bbd6f3875b0e874, []int{0}
 }
 func (m *Token) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -114,13 +66,6 @@ func (m *Token) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Token proto.InternalMessageInfo
 
-func (m *Token) GetValid() bool {
-	if m != nil {
-		return m.Valid
-	}
-	return false
-}
-
 func (m *Token) GetToken() string {
 	if m != nil {
 		return m.Token
@@ -139,7 +84,7 @@ func (m *Valid) Reset()         { *m = Valid{} }
 func (m *Valid) String() string { return proto.CompactTextString(m) }
 func (*Valid) ProtoMessage()    {}
 func (*Valid) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8bbd6f3875b0e874, []int{2}
+	return fileDescriptor_8bbd6f3875b0e874, []int{1}
 }
 func (m *Valid) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -176,7 +121,6 @@ func (m *Valid) GetValid() bool {
 }
 
 func init() {
-	proto.RegisterType((*Password)(nil), "pb.Password")
 	proto.RegisterType((*Token)(nil), "pb.Token")
 	proto.RegisterType((*Valid)(nil), "pb.Valid")
 }
@@ -184,20 +128,17 @@ func init() {
 func init() { proto.RegisterFile("auth.proto", fileDescriptor_8bbd6f3875b0e874) }
 
 var fileDescriptor_8bbd6f3875b0e874 = []byte{
-	// 208 bytes of a gzipped FileDescriptorProto
+	// 148 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0x2c, 0x2d, 0xc9,
-	0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x52, 0xe3, 0xe2, 0x08, 0x48,
-	0x2c, 0x2e, 0x2e, 0xcf, 0x2f, 0x4a, 0x11, 0x92, 0xe2, 0xe2, 0x28, 0x80, 0xb2, 0x25, 0x18, 0x15,
-	0x18, 0x35, 0x38, 0x83, 0xe0, 0x7c, 0x25, 0x63, 0x2e, 0xd6, 0x90, 0xfc, 0xec, 0xd4, 0x3c, 0x21,
-	0x11, 0x2e, 0xd6, 0xb2, 0xc4, 0x9c, 0x4c, 0x88, 0x0a, 0x8e, 0x20, 0x08, 0x07, 0x24, 0x5a, 0x02,
-	0x92, 0x96, 0x60, 0x02, 0xeb, 0x83, 0x70, 0x94, 0x64, 0xb9, 0x58, 0xc3, 0x60, 0xd2, 0x98, 0x9a,
-	0x8c, 0x4a, 0xb9, 0xb8, 0x9d, 0x13, 0x8b, 0x4a, 0x82, 0x53, 0x8b, 0xca, 0x32, 0x93, 0x53, 0x85,
-	0x94, 0xb8, 0x58, 0x7d, 0xf2, 0xd3, 0x33, 0xf3, 0x84, 0x78, 0xf4, 0x0a, 0x92, 0xf4, 0x60, 0xae,
-	0x92, 0xe2, 0x04, 0xf1, 0xc0, 0x76, 0x2b, 0x31, 0x08, 0xc9, 0x73, 0xb1, 0x3a, 0x67, 0xa4, 0x26,
-	0x67, 0x0b, 0x21, 0x44, 0x21, 0x0a, 0xc0, 0xf6, 0x28, 0x31, 0x08, 0x29, 0x72, 0xb1, 0x07, 0xa5,
-	0xa6, 0x15, 0xa5, 0x16, 0x67, 0x60, 0x28, 0x81, 0x9a, 0xe1, 0x24, 0x70, 0xe2, 0x91, 0x1c, 0xe3,
-	0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0xce, 0x78, 0x2c, 0xc7, 0x90, 0xc4, 0x06, 0x0e,
-	0x0f, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x06, 0xd4, 0x79, 0x5c, 0x1d, 0x01, 0x00, 0x00,
+	0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x92, 0xe5, 0x62, 0x0d, 0xc9,
+	0xcf, 0x4e, 0xcd, 0x13, 0x12, 0xe1, 0x62, 0x2d, 0x01, 0x31, 0x24, 0x98, 0x14, 0x18, 0x35, 0x38,
+	0x83, 0x20, 0x1c, 0x90, 0x74, 0x58, 0x62, 0x4e, 0x66, 0x0a, 0x48, 0xba, 0x0c, 0xc4, 0x90, 0x60,
+	0x54, 0x60, 0xd4, 0xe0, 0x08, 0x82, 0x70, 0x8c, 0xf4, 0xb8, 0xb8, 0x1d, 0x4b, 0x4b, 0x32, 0x82,
+	0x53, 0x8b, 0xca, 0x32, 0x93, 0x53, 0x85, 0xe4, 0xb9, 0x58, 0x9d, 0x33, 0x52, 0x93, 0xb3, 0x85,
+	0x38, 0xf5, 0x0a, 0x92, 0xf4, 0xc0, 0xe6, 0x4a, 0x81, 0x99, 0x60, 0x33, 0x94, 0x18, 0x9c, 0x04,
+	0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x19, 0x8f, 0xe5,
+	0x18, 0x92, 0xd8, 0xc0, 0x4e, 0x31, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xa6, 0xaf, 0xbf, 0x91,
+	0x98, 0x00, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -208,182 +149,76 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// CartServiceClient is the client API for CartService service.
+// AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type CartServiceClient interface {
-	Login(ctx context.Context, in *Password, opts ...grpc.CallOption) (*Token, error)
+type AuthServiceClient interface {
 	Check(ctx context.Context, in *Token, opts ...grpc.CallOption) (*Valid, error)
-	Refresh(ctx context.Context, in *Token, opts ...grpc.CallOption) (*Token, error)
 }
 
-type cartServiceClient struct {
+type authServiceClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewCartServiceClient(cc *grpc.ClientConn) CartServiceClient {
-	return &cartServiceClient{cc}
+func NewAuthServiceClient(cc *grpc.ClientConn) AuthServiceClient {
+	return &authServiceClient{cc}
 }
 
-func (c *cartServiceClient) Login(ctx context.Context, in *Password, opts ...grpc.CallOption) (*Token, error) {
-	out := new(Token)
-	err := c.cc.Invoke(ctx, "/pb.CartService/Login", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *cartServiceClient) Check(ctx context.Context, in *Token, opts ...grpc.CallOption) (*Valid, error) {
+func (c *authServiceClient) Check(ctx context.Context, in *Token, opts ...grpc.CallOption) (*Valid, error) {
 	out := new(Valid)
-	err := c.cc.Invoke(ctx, "/pb.CartService/Check", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.AuthService/Check", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *cartServiceClient) Refresh(ctx context.Context, in *Token, opts ...grpc.CallOption) (*Token, error) {
-	out := new(Token)
-	err := c.cc.Invoke(ctx, "/pb.CartService/Refresh", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// CartServiceServer is the server API for CartService service.
-type CartServiceServer interface {
-	Login(context.Context, *Password) (*Token, error)
+// AuthServiceServer is the server API for AuthService service.
+type AuthServiceServer interface {
 	Check(context.Context, *Token) (*Valid, error)
-	Refresh(context.Context, *Token) (*Token, error)
 }
 
-// UnimplementedCartServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedCartServiceServer struct {
+// UnimplementedAuthServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedAuthServiceServer struct {
 }
 
-func (*UnimplementedCartServiceServer) Login(ctx context.Context, req *Password) (*Token, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
-}
-func (*UnimplementedCartServiceServer) Check(ctx context.Context, req *Token) (*Valid, error) {
+func (*UnimplementedAuthServiceServer) Check(ctx context.Context, req *Token) (*Valid, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Check not implemented")
 }
-func (*UnimplementedCartServiceServer) Refresh(ctx context.Context, req *Token) (*Token, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
+
+func RegisterAuthServiceServer(s *grpc.Server, srv AuthServiceServer) {
+	s.RegisterService(&_AuthService_serviceDesc, srv)
 }
 
-func RegisterCartServiceServer(s *grpc.Server, srv CartServiceServer) {
-	s.RegisterService(&_CartService_serviceDesc, srv)
-}
-
-func _CartService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Password)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CartServiceServer).Login(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.CartService/Login",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServiceServer).Login(ctx, req.(*Password))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _CartService_Check_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_Check_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Token)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CartServiceServer).Check(ctx, in)
+		return srv.(AuthServiceServer).Check(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.CartService/Check",
+		FullMethod: "/pb.AuthService/Check",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServiceServer).Check(ctx, req.(*Token))
+		return srv.(AuthServiceServer).Check(ctx, req.(*Token))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CartService_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Token)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CartServiceServer).Refresh(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/pb.CartService/Refresh",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CartServiceServer).Refresh(ctx, req.(*Token))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-var _CartService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.CartService",
-	HandlerType: (*CartServiceServer)(nil),
+var _AuthService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.AuthService",
+	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Login",
-			Handler:    _CartService_Login_Handler,
-		},
-		{
 			MethodName: "Check",
-			Handler:    _CartService_Check_Handler,
-		},
-		{
-			MethodName: "Refresh",
-			Handler:    _CartService_Refresh_Handler,
+			Handler:    _AuthService_Check_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "auth.proto",
-}
-
-func (m *Password) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *Password) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *Password) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.XXX_unrecognized != nil {
-		i -= len(m.XXX_unrecognized)
-		copy(dAtA[i:], m.XXX_unrecognized)
-	}
-	if len(m.Password) > 0 {
-		i -= len(m.Password)
-		copy(dAtA[i:], m.Password)
-		i = encodeVarintAuth(dAtA, i, uint64(len(m.Password)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
 }
 
 func (m *Token) Marshal() (dAtA []byte, err error) {
@@ -416,16 +251,6 @@ func (m *Token) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintAuth(dAtA, i, uint64(len(m.Token)))
 		i--
 		dAtA[i] = 0x12
-	}
-	if m.Valid {
-		i--
-		if m.Valid {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i--
-		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -478,31 +303,12 @@ func encodeVarintAuth(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *Password) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Password)
-	if l > 0 {
-		n += 1 + l + sovAuth(uint64(l))
-	}
-	if m.XXX_unrecognized != nil {
-		n += len(m.XXX_unrecognized)
-	}
-	return n
-}
-
 func (m *Token) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Valid {
-		n += 2
-	}
 	l = len(m.Token)
 	if l > 0 {
 		n += 1 + l + sovAuth(uint64(l))
@@ -534,92 +340,6 @@ func sovAuth(x uint64) (n int) {
 func sozAuth(x uint64) (n int) {
 	return sovAuth(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *Password) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowAuth
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Password: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Password: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Password", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAuth
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAuth
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAuth
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Password = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipAuth(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthAuth
-			}
-			if (iNdEx + skippy) < 0 {
-				return ErrInvalidLengthAuth
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *Token) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -649,26 +369,6 @@ func (m *Token) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: Token: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Valid", wireType)
-			}
-			var v int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAuth
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				v |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			m.Valid = bool(v != 0)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
