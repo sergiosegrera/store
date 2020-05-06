@@ -12,23 +12,23 @@ services:
             - "5432:5432"
     
     auth:
-        build: ./auth
+        build: 
+            context: ./auth
+            dockerfile: Dockerfile.prod
         restart: always
         env_file:
             - "./envfile"
-        volumes:
-            - "./auth:/service"
         ports:
             - "8084"
             - "8000"
 
     product-manager:
-        build: ./product-manager
+        build: 
+            context: ./product-manager
+            dockerfile: Dockerfile.prod
         restart: always
         env_file:
             - "./envfile"
-        volumes:
-            - "./product-manager:/service"
         ports:
             - "8080"
         depends_on:
@@ -36,24 +36,24 @@ services:
             - auth
 
     product:
-        build: ./product
+        build: 
+            context: ./product
+            dockerfile: Dockerfile.prod
         restart: always
         env_file:
             - "./envfile"
-        volumes:
-            - "./product:/service"
         ports:
             - "8081"
         depends_on:
             - db
 
     cart:
-        build: ./cart
+        build:
+            context: ./cart
+            dockerfile: Dockerfile.prod
         restart: always
         env_file:
             - "./envfile"
-        volumes:
-            - "./cart:/service"
         ports:
             - "8082"
             - "8001"
@@ -61,12 +61,12 @@ services:
             - db
 
     checkout:
-        build: ./checkout
+        build:
+            context: ./checkout
+            dockerfile: Dockerfile.prod
         restart: always
         env_file:
             - "./envfile"
-        volumes:
-            - "./checkout:/service"
         ports:
             - "8083"
         depends_on:

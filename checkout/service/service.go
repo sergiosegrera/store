@@ -60,7 +60,7 @@ func (s Service) PostCheckout(ctx context.Context, cart pb.Cart) (string, error)
 		ShippingAddressCollection: &stripe.CheckoutSessionShippingAddressCollectionParams{
 			AllowedCountries: []*string{
 				stripe.String("US"),
-				stripe.String("CAD"),
+				stripe.String("CA"),
 			},
 		},
 		SuccessURL: stripe.String("https://example.com/success"),

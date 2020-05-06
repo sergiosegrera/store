@@ -1,17 +1,19 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 
+	"github.com/sergiosegrera/store/product/config"
 	"github.com/sergiosegrera/store/product/endpoints"
 	"github.com/sergiosegrera/store/product/service"
 	"github.com/sergiosegrera/store/product/transport/http/handlers"
 )
 
-func Serve(svc *service.Service) error {
+func Serve(svc *service.Service, conf *config.Config) error {
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
@@ -22,5 +24,5 @@ func Serve(svc *service.Service) error {
 	router.Get("/products", getProducts)
 	router.Get("/product/{id}", getProduct)
 
-	return http.ListenAndServe(":8080", router)
+	return http.ListenAndServe(fmt.Sprintf(":%v", conf.HttpPort), router)
 }

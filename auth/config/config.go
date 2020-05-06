@@ -11,7 +11,7 @@ type Config struct {
 
 func New() *Config {
 	return &Config{
-		HttpPort:     ParseEnv("AUTH_HTTP_PORT", "8085"),
+		HttpPort:     ParseEnv("AUTH_HTTP_PORT", "8084"),
 		GrpcPort:     ParseEnv("AUTH_GRPC_PORT", "8001"),
 		JwtSecretKey: []byte(ParseEnv("JWT_KEY", "verysecretmuchwow")),
 		Password:     []byte(ParseEnv("ADMIN_PASSWORD", "verysecretmuchwow")),

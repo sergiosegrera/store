@@ -6,15 +6,17 @@ import (
 	"os/signal"
 
 	"github.com/go-pg/pg/v9"
+	"github.com/sergiosegrera/store/product/config"
 	"github.com/sergiosegrera/store/product/db"
 	"github.com/sergiosegrera/store/product/service"
 	"github.com/sergiosegrera/store/product/transport/http"
 )
 
 func main() {
+	conf := config.New()
 	// Connect to DB
 	options := &pg.Options{
-		Addr:     "db:5432",
+		Addr:     conf.DatabaseAddress,
 		User:     "product",
 		Database: "product",
 		Password: "verysecuremuchwow",
@@ -29,7 +31,7 @@ func main() {
 	// Start attach db and start http server
 	go func() {
 		log.Println("Started the http server")
-		err := http.Serve(service.NewService(db))
+		err := http.Serve(service.NewService(db), conf)
 		if err != nil {
 			log.Println("The http server panicked:", err)
 			os.Exit(1)

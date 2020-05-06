@@ -49,9 +49,9 @@ func (s Service) PostCart(ctx context.Context, cart pb.Cart) (pb.Cart, error) {
 					if option.Stock >= cartProduct.Count {
 						outputCart.CartProducts = append(outputCart.CartProducts, &pb.CartProduct{
 							Id:          cartProduct.Id,
-							Name:        cartProduct.Name,
-							Description: cartProduct.Description,
-							Thumbnail:   cartProduct.Thumbnail,
+							Name:        product.Name,
+							Description: product.Description,
+							Thumbnail:   product.Thumbnail,
 							OptionId:    cartProduct.OptionId,
 							OptionName:  option.Name,
 							Count:       cartProduct.Count,
@@ -60,9 +60,9 @@ func (s Service) PostCart(ctx context.Context, cart pb.Cart) (pb.Cart, error) {
 					} else {
 						outputCart.CartProducts = append(outputCart.CartProducts, &pb.CartProduct{
 							Id:          cartProduct.Id,
-							Name:        cartProduct.Name,
-							Description: cartProduct.Description,
-							Thumbnail:   cartProduct.Thumbnail,
+							Name:        product.Name,
+							Description: product.Description,
+							Thumbnail:   product.Thumbnail,
 							OptionId:    cartProduct.OptionId,
 							OptionName:  option.Name,
 							Count:       option.Stock,
