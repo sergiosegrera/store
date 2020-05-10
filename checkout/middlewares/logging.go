@@ -27,3 +27,18 @@ func (mw Logging) PostCheckout(ctx context.Context, cart pb.Cart) (output string
 	output, err = mw.Next.PostCheckout(ctx, cart)
 	return
 }
+
+func (mw Logging) PostConfirm(ctx context.Context, id string) (err error) {
+	defer func(begin time.Time) {
+		mw.Logger.Info(
+			"checkout",
+			zap.String("method", "postconfirm"),
+			zap.String("id", id),
+			zap.NamedError("err", err),
+			zap.Duration("took", time.Since(begin)),
+		)
+	}(time.Now())
+
+	err = mw.Next.PostConfirm(ctx, id)
+	return
+}

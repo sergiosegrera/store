@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"log"
 
 	//	"github.com/go-pg/pg/v9"
 	cartclient "github.com/sergiosegrera/store/cart/clients/grpc"
@@ -13,6 +15,7 @@ import (
 
 type CheckoutService interface {
 	PostCheckout(ctx context.Context, cart pb.Cart) (string, error)
+	PostConfirm(ctx context.Context, id string) error
 }
 
 type Service struct {
@@ -48,15 +51,25 @@ func (s Service) PostCheckout(ctx context.Context, cart pb.Cart) (string, error)
 	}
 
 	// TODO: Get allowed countries service
-	// TODO: Change urls to match frontend
+	// TODO: Change redirect urls to match frontend
+	paymentIntentDataParams := &stripe.CheckoutSessionPaymentIntentDataParams{
+		CaptureMethod: stripe.String("manual"),
+	}
+
+	// Add cart to context/metadata
+	cartJson, err := json.Marshal(cartResponse)
+	if err != nil {
+		return "", err
+	}
+
+	paymentIntentDataParams.AddMetadata("cart", string(cartJson))
+
 	params := &stripe.CheckoutSessionParams{
 		PaymentMethodTypes: stripe.StringSlice([]string{
 			"card",
 		}),
-		LineItems: lineItems,
-		PaymentIntentData: &stripe.CheckoutSessionPaymentIntentDataParams{
-			CaptureMethod: stripe.String("manual"),
-		},
+		LineItems:         lineItems,
+		PaymentIntentData: paymentIntentDataParams,
 		ShippingAddressCollection: &stripe.CheckoutSessionShippingAddressCollectionParams{
 			AllowedCountries: []*string{
 				stripe.String("US"),
@@ -73,6 +86,16 @@ func (s Service) PostCheckout(ctx context.Context, cart pb.Cart) (string, error)
 	}
 
 	return session.ID, err
+}
+
+func (s Service) PostConfirm(ctx context.Context, id string) error {
+	paymentIntent, err := s.sc.PaymentIntents.Get(id, nil)
+	if err != nil {
+		return err
+	}
+
+	log.Println(paymentIntent.Metadata)
+	return err
 }
 
 var (

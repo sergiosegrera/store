@@ -17,8 +17,10 @@ func Serve(svc service.CheckoutService, conf *config.Config) error {
 	router.Use(middleware.Compress(5, "gzip"))
 
 	postCart := handlers.MakePostCheckoutHandler(endpoints.MakePostCheckoutEndpoint(svc))
+	postConfirm := handlers.MakePostConfirmHandler(endpoints.MakePostConfirmEndpoint(svc))
 
 	router.Post("/checkout", postCart)
+	router.Post("/confirm/{id}", postConfirm)
 
 	return http.ListenAndServe(fmt.Sprintf(":%v", conf.HttpPort), router)
 }
