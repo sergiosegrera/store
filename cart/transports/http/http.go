@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/sergiosegrera/store/cart/config"
 	"github.com/sergiosegrera/store/cart/endpoints"
 	"github.com/sergiosegrera/store/cart/service"
@@ -13,6 +14,7 @@ import (
 
 func Serve(svc service.CartService, conf *config.Config) error {
 	router := chi.NewRouter()
+	router.Use(middleware.Compress(5, "gzip"))
 
 	postCart := handlers.MakePostCartHandler(endpoints.MakePostCartEndpoint(svc))
 
