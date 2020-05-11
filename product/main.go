@@ -1,19 +1,27 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/signal"
 
 	"github.com/go-pg/pg/v9"
 	"github.com/sergiosegrera/store/product/config"
 	"github.com/sergiosegrera/store/product/db"
+	"github.com/sergiosegrera/store/product/middlewares"
 	"github.com/sergiosegrera/store/product/service"
-	"github.com/sergiosegrera/store/product/transport/http"
+	"github.com/sergiosegrera/store/product/transports/http"
+	"go.uber.org/zap"
 )
 
 func main() {
 	conf := config.New()
+
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	defer logger.Sync()
+
 	// Connect to DB
 	options := &pg.Options{
 		Addr:     conf.DatabaseAddress,
@@ -28,12 +36,15 @@ func main() {
 	}
 	defer db.Close()
 
+	productService := service.NewService(db)
+	productService = middlewares.Logging{logger, productService}
+
 	// Start attach db and start http server
 	go func() {
-		log.Println("Started the http server")
-		err := http.Serve(service.NewService(db), conf)
+		logger.Info("started the http server", zap.String("port", conf.HttpPort))
+		err := http.Serve(productService, conf)
 		if err != nil {
-			log.Println("The http server panicked:", err)
+			logger.Error("the http server panicked", zap.String("err", err.Error()))
 			os.Exit(1)
 		}
 	}()
@@ -43,5 +54,5 @@ func main() {
 	signal.Notify(c, os.Kill)
 
 	sig := <-c
-	log.Println("Got signal:", sig)
+	logger.Info("exited", zap.String("sig", sig.String()))
 }

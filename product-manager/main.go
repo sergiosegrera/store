@@ -21,6 +21,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer logger.Sync()
 
 	options := &pg.Options{
 		Addr:     conf.DatabaseAddress,

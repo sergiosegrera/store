@@ -17,11 +17,11 @@ type Service struct {
 	db *pg.DB
 }
 
-func NewService(d *pg.DB) *Service {
-	return &Service{db: d}
+func NewService(d *pg.DB) ProductService {
+	return Service{db: d}
 }
 
-func (s *Service) GetProducts(ctx context.Context) ([]*models.Thumbnail, error) {
+func (s Service) GetProducts(ctx context.Context) ([]*models.Thumbnail, error) {
 	var products []models.Product
 	err := s.db.Model(&products).Where("public = true").Select()
 	if err != nil {
@@ -41,7 +41,7 @@ func (s *Service) GetProducts(ctx context.Context) ([]*models.Thumbnail, error) 
 	return thumbnails, err
 }
 
-func (s *Service) GetProduct(ctx context.Context, id int64) (*models.Product, error) {
+func (s Service) GetProduct(ctx context.Context, id int64) (*models.Product, error) {
 	product := &models.Product{Id: id}
 	err := s.db.Select(product)
 	if err != nil {

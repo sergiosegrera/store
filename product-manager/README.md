@@ -14,7 +14,7 @@ DELETE /option/{id}
 
 ## Environment Variables
 ```
-DATABASE_ADDRESS
+DB_ADDRESS
 PRODUCT_MANAGER_HTTP_PORT
 AUTH_GRPC_ADDRESS -- Auth service address
 ```

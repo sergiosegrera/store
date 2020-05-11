@@ -32,6 +32,7 @@ func Serve(svc service.ProductManagerService, conf *config.Config, cc *grpc.Clie
 	postOptionEndpoint := middlewares.Auth(authClient)(endpoints.MakePostOptionEndpoint(svc))
 	deleteOptionEndpoint := middlewares.Auth(authClient)(endpoints.MakeDeleteOptionEndpoint(svc))
 
+	// http handlers
 	getProducts := handlers.MakeGetProductsHandler(getProductsEndpoint)
 	getProduct := handlers.MakeGetProductHandler(getProductEndpoint)
 	postProduct := handlers.MakePostProductHandler(postProductEndpoint)

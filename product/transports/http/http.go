@@ -10,13 +10,12 @@ import (
 	"github.com/sergiosegrera/store/product/config"
 	"github.com/sergiosegrera/store/product/endpoints"
 	"github.com/sergiosegrera/store/product/service"
-	"github.com/sergiosegrera/store/product/transport/http/handlers"
+	"github.com/sergiosegrera/store/product/transports/http/handlers"
 )
 
-func Serve(svc *service.Service, conf *config.Config) error {
+func Serve(svc service.ProductService, conf *config.Config) error {
 	router := chi.NewRouter()
-
-	router.Use(middleware.Logger)
+	router.Use(middleware.Compress(5, "gzip"))
 
 	getProducts := handlers.MakeGetProductsHandler(endpoints.MakeGetProductsEndpoint(svc))
 	getProduct := handlers.MakeGetProductHandler(endpoints.MakeGetProductEndpoint(svc))
